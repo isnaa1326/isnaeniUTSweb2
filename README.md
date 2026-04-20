@@ -97,7 +97,64 @@
 | Font Awesome | 🎯 | Ikon-ikon UI |
 
 ---
+### 📝 **Langkah-langkah Menjalankan melalui Local Web Server**
 
+> ⚠️ **PENTING:** Jalankan melalui local web server untuk menghindari CORS error!
+
+#### 1️⃣ **Clone Repository**
+```bash
+git clone https://github.com/isnaa1326/isnaeniUTSweb2.git
+Atau klik link ini: https://github.com/isnaa1326/isnaeniUTSweb2
+
+2️⃣ Buka dengan Text Editor
+Buka folder proyek menggunakan text editor seperti Visual Studio Code.
+
+3️⃣ Jalankan dengan Live Server (Rekomendasi) ⭐
+Klik kanan pada file index.html
+
+Pilih "Open with Live Server"
+
+Secara otomatis, browser akan terbuka (biasanya di http://127.0.0.1:5500)
+
+Aplikasi VeloraStore siap digunakan! 🎉
+
+4️⃣ Atau Buka Demo Online
+Klik link ini: https://isnaa1326.github.io/isnaeniUTSweb2/
+
+5️⃣ Register Akun Baru 📝
+text
+- Klik tombol "Register" ✨
+- Isi nama lengkap 👤
+- Isi email 📧
+- Buat password (minimal 6 karakter) 🔒
+6️⃣ Login 🔑
+text
+- Masukkan email dan password
+- Klik "Login" 🚪
+7️⃣ Mulai Belanja 🛍️
+text
+- Gunakan search bar untuk mencari produk 🔍
+- Filter produk berdasarkan kategori 🏷️
+- Klik "Tambah ke Keranjang" ➕
+8️⃣ Checkout 💳
+text
+- Buka halaman Cart 🛒
+- Klik "Checkout" ✅
+- Isi data pengiriman 📦
+- Pilih kota tujuan 🏙️
+- Klik "Bayar dengan QRIS" 📱
+9️⃣ Pembayaran QRIS ✨
+text
+- Scan QR Code dengan aplikasi M-Banking
+- Klik "Konfirmasi Pembayaran" ✅
+🔟 Lihat Riwayat Pesanan 📋
+text
+- Buka halaman "Orders" 📜
+- Semua pesanan akan muncul
+1️⃣1️⃣ Dark Mode 🌙
+text
+- Klik tombol di pojok kiri bawah
+- Mode gelap/terang otomatis berubah
 
 ## Link Demo (GitHub Pages)
 Aplikasi ini telah di-deploy dan dapat diakses secara online melalui tautan berikut:

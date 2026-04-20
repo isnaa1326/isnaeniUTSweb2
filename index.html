@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VeloraStore - Online Shop Premium with QRIS</title>
+    <title>VeloraStore - Online Shop with Midtrans & Ongkir</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="Mid-client-4c0WuJEZpu9Y1Pfi"></script>
     <style>
         * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
         
@@ -135,7 +136,7 @@
     <script>
         // ==================== DATA PRODUK ====================
         const PRODUCTS = [
-            { id: "p1", name: "Velora Hoodie Premium", category: "Clothing", price: 499000, image: "https://picsum.photos/id/20/400/400", rating: 4.8, stock: 25, weight: 500, description: "Hoodie premium dengan bahan cotton combed 30s" },
+            { id: "p1", name: "Urban Hoodie Premium", category: "Clothing", price: 499000, image: "https://picsum.photos/id/20/400/400", rating: 4.8, stock: 25, weight: 500, description: "Hoodie premium dengan bahan cotton combed 30s" },
             { id: "p2", name: "Slim Fit Jeans", category: "Clothing", price: 359000, image: "https://picsum.photos/id/21/400/400", rating: 4.5, stock: 40, weight: 400, description: "Jeans slim fit dengan bahan denim stretch" },
             { id: "p3", name: "Running Shoes Pro", category: "Footwear", price: 789000, image: "https://picsum.photos/id/22/400/400", rating: 4.9, stock: 15, weight: 600, description: "Sepatu lari profesional" },
             { id: "p4", name: "Smart Watch X1", category: "Accessories", price: 1250000, image: "https://picsum.photos/id/23/400/400", rating: 4.7, stock: 10, weight: 200, description: "Smartwatch fitur lengkap" },
@@ -146,9 +147,9 @@
         ];
 
         // ==================== STORAGE KEYS ====================
-        const STORAGE_USERS = 'velorastore_users';
-        const STORAGE_SESSION = 'velorastore_session';
-        const STORAGE_DARK_MODE = 'velorastore_darkmode';
+        const STORAGE_USERS = 'urbanstore_users';
+        const STORAGE_SESSION = 'urbanstore_session';
+        const STORAGE_DARK_MODE = 'urbanstore_darkmode';
 
         // ==================== DARK MODE ====================
         function initDarkMode() {
@@ -169,11 +170,11 @@
             const icon = document.getElementById('darkModeIcon');
             const text = document.getElementById('darkModeText');
             if (isDark) {
-                if (icon) icon.classList.replace('fa-moon', 'fa-sun');
-                if (text) text.innerText = 'Light Mode';
+                icon.classList.replace('fa-moon', 'fa-sun');
+                text.innerText = 'Light Mode';
             } else {
-                if (icon) icon.classList.replace('fa-sun', 'fa-moon');
-                if (text) text.innerText = 'Dark Mode';
+                icon.classList.replace('fa-sun', 'fa-moon');
+                text.innerText = 'Dark Mode';
             }
         }
 
@@ -361,8 +362,7 @@
                                 }).join('')).join('')}
                             </g>
                         </svg>
-                        <p class="text-sm text-gray-500 mt-2">Scan QR Code dengan Aplikasi M-Banking</p>
-                        <p class="text-xs text-gray-400 mt-2">VeloraStore • Pembayaran Aman</p>
+                        <p class="text-sm text-gray-500 mt-2">Scan QR Code dengan Aplikasi M-Banking (Gopay, OVO, ShopeePay, dll)</p>
                     </div>
                     <div class="flex gap-3 mt-4">
                         <button id="cancelPayment" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Batal</button>
@@ -438,7 +438,7 @@
             const user = getCurrentUser();
             const cartCount = getCartCount();
             return `<nav class="glass-card shadow-lg sticky top-0 z-50 mb-6"><div class="container mx-auto px-6 py-4"><div class="flex justify-between items-center flex-wrap gap-4">
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('products')"><i class="fas fa-store text-purple-600 text-3xl"></i><h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">VeloraStore</h1></div>
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('products')"><i class="fas fa-store text-purple-600 text-3xl"></i><h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">UrbanStore</h1></div>
                 ${user ? `<div class="flex items-center space-x-4">
                     <button onclick="navigateTo('products')" class="hover:text-purple-600 transition" style="color: var(--text-primary)"><i class="fas fa-store"></i> Shop</button>
                     <button onclick="navigateTo('cart')" class="relative hover:text-purple-600 transition" style="color: var(--text-primary)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center">${cartCount}</span></button>
@@ -451,7 +451,7 @@
         function renderLogin() {
             document.getElementById('app').innerHTML = `${renderNavbar()}
                 <div class="min-h-[70vh] flex items-center justify-center"><div class="glass-card p-8 rounded-2xl shadow-2xl w-full max-w-md">
-                <div class="text-center mb-8"><i class="fas fa-store text-purple-600 text-5xl mb-4"></i><h2 class="text-3xl font-bold" style="color: var(--text-primary)">Welcome to VeloraStore</h2><p style="color: var(--text-secondary)">Login to your account</p></div>
+                <div class="text-center mb-8"><i class="fas fa-store text-purple-600 text-5xl mb-4"></i><h2 class="text-3xl font-bold" style="color: var(--text-primary)">Welcome Back</h2><p style="color: var(--text-secondary)">Login to your account</p></div>
                 <form id="loginForm"><div class="mb-4"><label style="color: var(--text-primary)">Email</label><input type="email" id="email" required class="w-full px-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
                 <div class="mb-6"><label style="color: var(--text-primary)">Password</label><input type="password" id="password" required class="w-full px-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
                 <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-semibold">Login</button></form>
@@ -459,8 +459,7 @@
             document.getElementById('loginForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (loginUser(document.getElementById('email').value, document.getElementById('password').value)) {
-                    currentPage = 'products';
-                    render();
+                    currentPage = 'products'; render();
                 }
             });
         }
@@ -468,7 +467,7 @@
         function renderRegister() {
             document.getElementById('app').innerHTML = `${renderNavbar()}
                 <div class="min-h-[70vh] flex items-center justify-center"><div class="glass-card p-8 rounded-2xl shadow-2xl w-full max-w-md">
-                <div class="text-center mb-8"><i class="fas fa-user-plus text-purple-600 text-5xl mb-4"></i><h2 class="text-3xl font-bold" style="color: var(--text-primary)">Join VeloraStore</h2><p style="color: var(--text-secondary)">Create your account</p></div>
+                <div class="text-center mb-8"><i class="fas fa-user-plus text-purple-600 text-5xl mb-4"></i><h2 class="text-3xl font-bold" style="color: var(--text-primary)">Create Account</h2><p style="color: var(--text-secondary)">Join UrbanStore</p></div>
                 <form id="registerForm"><div class="mb-4"><label style="color: var(--text-primary)">Full Name</label><input type="text" id="name" required class="w-full px-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
                 <div class="mb-4"><label style="color: var(--text-primary)">Email</label><input type="email" id="email" required class="w-full px-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
                 <div class="mb-6"><label style="color: var(--text-primary)">Password (min 6)</label><input type="password" id="password" required class="w-full px-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
@@ -477,8 +476,7 @@
             document.getElementById('registerForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (registerUser(document.getElementById('name').value, document.getElementById('email').value, document.getElementById('password').value)) {
-                    currentPage = 'login';
-                    render();
+                    currentPage = 'login'; render();
                 }
             });
         }
@@ -497,7 +495,7 @@
             document.getElementById('app').innerHTML = `${renderNavbar()}
                 <div class="mb-8"><div class="flex flex-col md:flex-row gap-4">
                     <div class="flex-1 relative"><i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    <input type="text" id="searchInput" placeholder="Cari produk di VeloraStore..." value="${searchQuery}" class="w-full pl-10 pr-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
+                    <input type="text" id="searchInput" placeholder="Cari produk..." value="${searchQuery}" class="w-full pl-10 pr-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
                     <select id="categoryFilter" class="px-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)">
                         <option value="">Semua Kategori</option>
                         ${categories.map(cat => `<option value="${cat}" ${selectedCategory === cat ? 'selected' : ''}>${cat}</option>`).join('')}
@@ -509,10 +507,10 @@
                         <div class="p-4"><div class="flex justify-between"><h3 class="font-bold cursor-pointer hover:text-purple-600" onclick="viewProduct('${p.id}')" style="color: var(--text-primary)">${p.name}</h3><span class="text-purple-600 font-bold">${formatRupiah(p.price)}</span></div>
                         <div class="flex items-center mt-2 mb-3"><div class="flex text-yellow-400">${Array(5).fill().map((_, i) => `<i class="fas fa-star ${i < Math.floor(p.rating) ? 'text-yellow-400' : 'text-gray-300'} text-sm"></i>`).join('')}</div><span class="text-sm ml-2" style="color: var(--text-secondary)">(${p.rating})</span><span class="text-xs ml-2" style="color: var(--text-secondary)">${p.category}</span></div>
                         <p class="text-sm mb-4" style="color: var(--text-secondary)">${p.description.substring(0, 50)}...</p>
-                        <button onclick="addToCartById('${p.id}')" class="btn-primary w-full text-white py-2 rounded-lg"><i class="fas fa-shopping-cart mr-2"></i>Tambah ke Keranjang</button></div></div>
+                        <button onclick="addToCartById('${p.id}')" class="btn-primary w-full text-white py-2 rounded-lg"><i class="fas fa-shopping-cart mr-2"></i>Tambah</button></div></div>
                     `).join('')}
                 </div>
-                ${filtered.length === 0 ? `<div class="text-center py-20"><i class="fas fa-box-open text-6xl mb-4" style="color: var(--text-secondary)"></i><p style="color: var(--text-secondary)">Tidak ada produk ditemukan di VeloraStore</p></div>` : ''}`;
+                ${filtered.length === 0 ? `<div class="text-center py-20"><i class="fas fa-box-open text-6xl mb-4" style="color: var(--text-secondary)"></i><p style="color: var(--text-secondary)">Tidak ada produk ditemukan</p></div>` : ''}`;
             
             const searchInput = document.getElementById('searchInput');
             const categoryFilter = document.getElementById('categoryFilter');
@@ -535,15 +533,12 @@
         function renderCart() {
             const cart = getCart();
             const total = getCartTotal();
-            document.getElementById('app').innerHTML = `${renderNavbar()}<div class="glass-card p-6 rounded-2xl"><h2 class="text-2xl font-bold mb-6" style="color: var(--text-primary)">Keranjang Belanja</h2>
-                ${cart.length === 0 ? `<div class="text-center py-20"><i class="fas fa-shopping-cart text-6xl mb-4" style="color: var(--text-secondary)"></i><p class="mb-4" style="color: var(--text-secondary)">Keranjang kosong</p><button onclick="navigateTo('products')" class="btn-primary text-white px-6 py-2 rounded-lg">Belanja di VeloraStore</button></div>` : `
+            document.getElementById('app').innerHTML = `${renderNavbar()}<div class="glass-card p-6 rounded-2xl"><h2 class="text-2xl font-bold mb-6" style="color: var(--text-primary)">Shopping Cart</h2>
+                ${cart.length === 0 ? `<div class="text-center py-20"><i class="fas fa-shopping-cart text-6xl mb-4" style="color: var(--text-secondary)"></i><p class="mb-4" style="color: var(--text-secondary)">Keranjang kosong</p><button onclick="navigateTo('products')" class="btn-primary text-white px-6 py-2 rounded-lg">Belanja</button></div>` : `
                 <div class="overflow-x-auto"><table class="w-full"><thead class="border-b" style="border-color: var(--border-color)"><tr><th class="pb-3 text-left" style="color: var(--text-primary)">Produk</th><th style="color: var(--text-primary)">Harga</th><th style="color: var(--text-primary)">Jumlah</th><th style="color: var(--text-primary)">Subtotal</th><th></th></tr></thead>
                 <tbody>${cart.map(item => `<tr class="border-b" style="border-color: var(--border-color)"><td class="py-4"><div class="flex items-center gap-3"><img src="${item.image}" class="w-16 h-16 object-cover rounded"><span class="font-medium" style="color: var(--text-primary)">${item.name}</span></div></td>
-                <td style="color: var(--text-primary)">${formatRupiah(item.price)}</td>
-                <td><input type="number" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', this.value)" class="w-20 px-2 py-1 border rounded text-center" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></td>
-                <td style="color: var(--text-primary)">${formatRupiah(item.price * item.quantity)}</td>
-                <td><button onclick="removeCartItem('${item.id}')" class="text-red-500"><i class="fas fa-trash"></i></button></td>
-                </tr>`).join('')}</tbody>
+                <td style="color: var(--text-primary)">${formatRupiah(item.price)}</td><td><input type="number" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', this.value)" class="w-20 px-2 py-1 border rounded text-center" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></td>
+                <td style="color: var(--text-primary)">${formatRupiah(item.price * item.quantity)}</td><td><button onclick="removeCartItem('${item.id}')" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody>
                 <tfoot><tr class="border-t-2" style="border-color: var(--border-color)"><td colspan="3" class="pt-4 text-right font-bold" style="color: var(--text-primary)">Total:</td><td class="pt-4 font-bold text-xl text-purple-600">${formatRupiah(total)}</td><td class="pt-4"></td></tr></tfoot>
                 </table></div>
                 <div class="mt-6 flex justify-end gap-4"><button onclick="navigateTo('products')" class="px-6 py-2 border rounded-lg" style="border-color: var(--border-color); color: var(--text-primary)">Lanjutkan</button><button onclick="navigateTo('checkout')" class="btn-primary text-white px-6 py-2 rounded-lg">Checkout</button></div>`}</div>`;
@@ -568,9 +563,9 @@
                         ${KOTA.map(k => `<option value="${k.id}">${k.nama}</option>`).join('')}
                     </select>
                 </div>
-               
-                                <div class="mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                    <p style="color: var(--text-primary)"><i class="fas fa-weight-hanging"></i> Total Berat: ${(beratTotal / 1000).toFixed(1)} kg</p>
+                <div class="mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                    <p style="color: var(--text-primary)"><
+                                        <p style="color: var(--text-primary)"><i class="fas fa-weight-hanging"></i> Total Berat: ${(beratTotal / 1000).toFixed(1)} kg</p>
                     <p id="ongkirDisplay" style="color: var(--text-primary)"><i class="fas fa-truck"></i> Ongkos Kirim: -</p>
                 </div>
                 <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-semibold"><i class="fas fa-qrcode mr-2"></i>Bayar dengan QRIS</button></form></div>
@@ -617,8 +612,8 @@
 
         function renderHistory() {
             const orders = getOrderHistory();
-            document.getElementById('app').innerHTML = `${renderNavbar()}<div class="glass-card p-6 rounded-2xl"><h2 class="text-2xl font-bold mb-6" style="color: var(--text-primary)">Riwayat Pesanan VeloraStore</h2>
-                ${orders.length === 0 ? `<div class="text-center py-20"><i class="fas fa-receipt text-6xl mb-4" style="color: var(--text-secondary)"></i><p style="color: var(--text-secondary)">Belum ada pesanan</p><button onclick="navigateTo('products')" class="btn-primary text-white px-6 py-2 rounded-lg mt-4">Belanja di VeloraStore</button></div>` :
+            document.getElementById('app').innerHTML = `${renderNavbar()}<div class="glass-card p-6 rounded-2xl"><h2 class="text-2xl font-bold mb-6" style="color: var(--text-primary)">Riwayat Pesanan</h2>
+                ${orders.length === 0 ? `<div class="text-center py-20"><i class="fas fa-receipt text-6xl mb-4" style="color: var(--text-secondary)"></i><p style="color: var(--text-secondary)">Belum ada pesanan</p><button onclick="navigateTo('products')" class="btn-primary text-white px-6 py-2 rounded-lg mt-4">Belanja</button></div>` :
                 `<div class="space-y-6">${orders.map(order => `<div class="border rounded-xl p-4" style="border-color: var(--border-color); background: var(--bg-card)">
                     <div class="flex justify-between flex-wrap gap-2"><div><span class="text-sm" style="color: var(--text-secondary)">ID: ${order.id}</span><p class="text-sm" style="color: var(--text-secondary)">${new Date(order.date).toLocaleString('id-ID')}</p></div>
                     <div class="flex gap-2 flex-wrap"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm"><i class="fas fa-check-circle"></i> Lunas</span>

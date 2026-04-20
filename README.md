@@ -1,7 +1,7 @@
-# VeloraStore - Online Shop Premium dengan QRIS & Ongkir
+# UrbanStore - Online Shop Premium dengan QRIS & Ongkir
 
 ## Deskripsi Project
-**VeloraStore** adalah aplikasi online shop modern yang dibangun menggunakan HTML, Tailwind CSS, dan JavaScript Vanilla. Aplikasi ini memiliki fitur lengkap seperti autentikasi pengguna, manajemen produk, keranjang belanja, perhitungan ongkir berdasarkan berat dan kota tujuan, pembayaran dengan QRIS, serta riwayat pesanan. Semua data disimpan menggunakan LocalStorage.
+**UrbanStore** adalah aplikasi online shop modern yang dibangun menggunakan HTML, Tailwind CSS, dan JavaScript Vanilla. Aplikasi ini memiliki fitur lengkap seperti autentikasi pengguna, manajemen produk, keranjang belanja, perhitungan ongkir berdasarkan berat dan kota tujuan, pembayaran dengan QRIS, serta riwayat pesanan. Semua data disimpan menggunakan LocalStorage.
 
 ---
 
@@ -53,36 +53,4 @@
 - ✅ Animasi hover pada produk
 
 ---
-
-## Cara Menjalankan
-
-1. **Buat folder** `NamaDepan_NamaBelakang_UTS_Web2`
-2. **Buat file `index.html`** dan copy semua kode di atas
-3. **Buat file `README.md`** dan copy isi ini
-4. **Jalankan dengan Live Server** di VSCode
-
----
-
-## Teknologi yang Digunakan
-
-| Teknologi | Fungsi |
-|-----------|--------|
-| HTML5 | Struktur halaman web |
-| Tailwind CSS | Styling dan responsive design |
-| JavaScript ES6+ | Logic dan interaktivitas |
-| LocalStorage | Simulasi database |
-| SweetAlert2 | Toast notification |
-| Font Awesome | Ikon-ikon UI |
-
----
-
-## Author
-
-**Nama: isnaeni**
-- NIM: [2411070076]
-- Kelas: Web Programming 2
-
----
-
-## Lisensi
 

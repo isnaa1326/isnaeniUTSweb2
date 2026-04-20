@@ -1,7 +1,7 @@
-# Nexora - Online Shop Premium dengan QRIS & Ongkir
+# urbanshop - Online Shop Premium dengan QRIS & Ongkir
 
 ## Deskripsi Project
-**Nexora** adalah aplikasi online shop modern yang dibangun menggunakan HTML, Tailwind CSS, dan JavaScript Vanilla. Aplikasi ini memiliki fitur lengkap seperti autentikasi pengguna, manajemen produk, keranjang belanja, perhitungan ongkir berdasarkan berat dan kota tujuan, pembayaran dengan QRIS, serta riwayat pesanan. Semua data disimpan menggunakan LocalStorage.
+**urbanshop** adalah aplikasi online shop modern yang dibangun menggunakan HTML, Tailwind CSS, dan JavaScript Vanilla. Aplikasi ini memiliki fitur lengkap seperti autentikasi pengguna, manajemen produk, keranjang belanja, perhitungan ongkir berdasarkan berat dan kota tujuan, pembayaran dengan QRIS, serta riwayat pesanan. Semua data disimpan menggunakan LocalStorage.
 
 ---
 

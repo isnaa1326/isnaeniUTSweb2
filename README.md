@@ -101,8 +101,7 @@
 
 > ⚠️ **PENTING:** Jalankan melalui local web server untuk menghindari CORS error!
 
-#### 1️⃣ **Clone Repository**
-```bash
+ 1️⃣ Clone Repository
 git clone https://github.com/isnaa1326/isnaeniUTSweb2.git
 Atau klik link ini: https://github.com/isnaa1326/isnaeniUTSweb2
 

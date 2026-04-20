@@ -1,15 +1,8 @@
-# ✨ VeloraStore | Premium Online Shop ✨
-
-![VeloraStore Banner](https://img.shields.io/badge/VeloraStore-Premium%20Online%20Shop-purple?style=for-the-badge&logo=shopify)
-![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?style=for-the-badge&logo=javascript)
-
----
+# ✨ UrbanStore | Premium Online Shop ✨
 
 ## 📱 **Tentang VeloraStore** 🚀
 
-**VeloraStore** adalah aplikasi **online shop premium** yang dibangun menggunakan **HTML5**, **Tailwind CSS**, dan **JavaScript Vanilla** (ES6+). Aplikasi ini memiliki fitur lengkap seperti autentikasi pengguna, manajemen produk, keranjang belanja, perhitungan ongkir berdasarkan berat dan kota tujuan, pembayaran dengan **QRIS**, serta riwayat pesanan. Semua data disimpan menggunakan **LocalStorage** sebagai simulasi database.
+**UrbanStore** adalah aplikasi **online shop premium** yang dibangun menggunakan **HTML5**, **Tailwind CSS**, dan **JavaScript Vanilla** (ES6+). Aplikasi ini memiliki fitur lengkap seperti autentikasi pengguna, manajemen produk, keranjang belanja, perhitungan ongkir berdasarkan berat dan kota tujuan, pembayaran dengan **QRIS**, serta riwayat pesanan. Semua data disimpan menggunakan **LocalStorage** sebagai simulasi database.
 
 > ✨ *"Belanja Mudah, Cepat, dan Aman bersama VeloraStore!"* ✨
 
@@ -96,25 +89,17 @@
 
 | Teknologi | Ikon | Fungsi |
 |-----------|------|--------|
-| HTML5 | <img src="https://img.icons8.com/color/20/000000/html-5.png"/> | Struktur halaman web |
-| Tailwind CSS | <img src="https://img.icons8.com/color/20/000000/tailwindcss.png"/> | Styling dan responsive design |
-| JavaScript ES6+ | <img src="https://img.icons8.com/color/20/000000/javascript.png"/> | Logic dan interaktivitas |
+| HTML5 | 🌐 | Struktur halaman web |
+| Tailwind CSS | 🎨 | Styling dan responsive design |
+| JavaScript ES6+ | ⚡ | Logic dan interaktivitas |
 | LocalStorage | 💾 | Simulasi database |
 | SweetAlert2 | 🔔 | Toast notification |
-| Font Awesome | <i class="fas fa-icons"></i> | Ikon-ikon UI |
+| Font Awesome | 🎯 | Ikon-ikon UI |
 
 ---
 
-## 🚀 **Cara Menjalankan Project**
 
-### 📋 **Prasyarat**
-- 🌐 Web browser modern (Chrome, Firefox, Safari, Edge)
-- 📶 Koneksi internet (untuk mengakses CDN)
+## Link Demo (GitHub Pages)
+Aplikasi ini telah di-deploy dan dapat diakses secara online melalui tautan berikut:
 
-### 📝 **Langkah-langkah Menjalankan melalui Local Web Server**
-
-> ⚠️ **PENTING:** Jalankan melalui local web server untuk menghindari CORS error!
-
-#### 1️⃣ **Clone atau Download Repository**
-```bash
-git clone https://github.com/isnaa1326/isnaeniUTSweb2.git
+👉 **[Demo UrbanStore di GitHub Pages](https://midahhhh.github.io/hamidah_qudsyiatun_nufus_UTS-web2/)**

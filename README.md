@@ -102,4 +102,4 @@
 
 #### 1️⃣ **Clone Repository**
 ```bash
-git clone = https://isnaa1326.github.io/isnaeniUTSweb2/
+https://isnaa1326.github.io/isnaeniUTSweb2/

@@ -1,5 +1,9 @@
 # ✨ VeloraStore | Premium Online Shop ✨
 
+![VeloraStore Banner](https://img.shields.io/badge/VeloraStore-Premium%20Online%20Shop-purple?style=for-the-badge&logo=shopify)
+![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?style=for-the-badge&logo=javascript)
 
 ---
 
@@ -87,19 +91,30 @@
 | Emoticon di setiap section 😊 | ✅ |
 
 ---
-## Teknologi yang Digunakan
 
-| Teknologi | Fungsi |
-|-----------|--------|
-| HTML5 | Struktur halaman web |
-| Tailwind CSS | Styling dan responsive design |
-| JavaScript ES6+ | Logic dan interaktivitas |
-| LocalStorage | Simulasi database |
-| SweetAlert2 | Toast notification |
-| Font Awesome | Ikon-ikon UI |
+## 🛠️ **Teknologi yang Digunakan**
 
+| Teknologi | Ikon | Fungsi |
+|-----------|------|--------|
+| HTML5 | <img src="https://img.icons8.com/color/20/000000/html-5.png"/> | Struktur halaman web |
+| Tailwind CSS | <img src="https://img.icons8.com/color/20/000000/tailwindcss.png"/> | Styling dan responsive design |
+| JavaScript ES6+ | <img src="https://img.icons8.com/color/20/000000/javascript.png"/> | Logic dan interaktivitas |
+| LocalStorage | 💾 | Simulasi database |
+| SweetAlert2 | 🔔 | Toast notification |
+| Font Awesome | <i class="fas fa-icons"></i> | Ikon-ikon UI |
 
+---
 
-#### 1️⃣ **Clone Repository**
+## 🚀 **Cara Menjalankan Project**
+
+### 📋 **Prasyarat**
+- 🌐 Web browser modern (Chrome, Firefox, Safari, Edge)
+- 📶 Koneksi internet (untuk mengakses CDN)
+
+### 📝 **Langkah-langkah Menjalankan melalui Local Web Server**
+
+> ⚠️ **PENTING:** Jalankan melalui local web server untuk menghindari CORS error!
+
+#### 1️⃣ **Clone atau Download Repository**
 ```bash
-https://isnaa1326.github.io/isnaeniUTSweb2/
+git clone https://github.com/isnaa1326/isnaeniUTSweb2.git

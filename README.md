@@ -102,4 +102,4 @@
 ## Link Demo (GitHub Pages)
 Aplikasi ini telah di-deploy dan dapat diakses secara online melalui tautan berikut:
 
-👉 **[Demo UrbanStore di GitHub Pages](https://midahhhh.github.io/hamidah_qudsyiatun_nufus_UTS-web2/)**
+👉 **[Demo UrbanStore di GitHub Pages](https://isnaa1326.github.io/isnaeniUTSweb2/)**

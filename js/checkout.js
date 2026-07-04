@@ -38,8 +38,9 @@ function showQRISModal(formData, totalAmount, ongkir, kotaNama) {
         const result = await processCheckout(formData, ongkir, kotaNama);
         if (result && result.orderId) {
             openWhatsAppNotification(formData, ongkir, kotaNama, cart, result.orderId, total);
+        } else {
+            navigateTo('history');
         }
-        navigateTo('history');
     };
     
     document.getElementById('cancelPayment').onclick = () => {
@@ -160,5 +161,5 @@ function openWhatsAppNotification(formData, ongkir, kotaNama, cart, orderId, tot
         waNumber = '62' + waNumber.slice(1);
     }
     const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(pesan)}`;
-    window.open(waUrl, '_blank');
+    window.location.href = waUrl;
 }

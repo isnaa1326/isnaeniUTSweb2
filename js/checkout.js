@@ -32,7 +32,13 @@ function showQRISModal(formData, totalAmount, ongkir, kotaNama) {
     
     document.getElementById('confirmPayment').onclick = async () => {
         modal.remove();
-        await processCheckout(formData, ongkir, kotaNama);
+        const cart = getCart();
+        const subtotal = getCartTotal();
+        const total = subtotal + ongkir;
+        const result = await processCheckout(formData, ongkir, kotaNama);
+        if (result && result.orderId) {
+            openWhatsAppNotification(formData, ongkir, kotaNama, cart, result.orderId, total);
+        }
         navigateTo('history');
     };
     
@@ -124,4 +130,35 @@ async function getOrderHistory() {
         console.error('Error fetch order history:', err);
     }
     return [];
+}
+
+function openWhatsAppNotification(formData, ongkir, kotaNama, cart, orderId, totalAmount) {
+    const itemList = cart
+      .map(item => `  • ${item.name} x${item.quantity} = Rp${(item.price * item.quantity).toLocaleString('id-ID')}`)
+      .join('\n');
+
+    const pesan =
+      `🛍️ *PESANAN BARU - UrbanStore*\n` +
+      `━━━━━━━━━━━━━━━━━━\n` +
+      `📋 *Order ID:* ${orderId}\n` +
+      `📅 *Waktu:* ${new Date().toLocaleString('id-ID')}\n\n` +
+      `👤 *Customer:*\n` +
+      `  Nama: ${formData.name}\n` +
+      `  HP: ${formData.phone}\n` +
+      `  Alamat: ${formData.address}, ${kotaNama}\n\n` +
+      `🛒 *Produk Dipesan:*\n` +
+      `${itemList}\n\n` +
+      `💰 *Rincian Harga:*\n` +
+      `  Subtotal: Rp${(totalAmount - ongkir).toLocaleString('id-ID')}\n` +
+      `  Ongkir: Rp${ongkir.toLocaleString('id-ID')}\n` +
+      `  *TOTAL: Rp${totalAmount.toLocaleString('id-ID')}*\n\n` +
+      `✅ Status: LUNAS (QRIS)\n` +
+      `━━━━━━━━━━━━━━━━━━`;
+
+    let waNumber = OWNER_WA_NUMBER;
+    if (waNumber.startsWith('0')) {
+        waNumber = '62' + waNumber.slice(1);
+    }
+    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(pesan)}`;
+    window.open(waUrl, '_blank');
 }

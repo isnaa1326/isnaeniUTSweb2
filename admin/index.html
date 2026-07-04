@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanStore - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f3f4f6; margin: 0; }
+        .sidebar { width: 240px; min-height: 100vh; background: linear-gradient(180deg,#7c3aed,#db2777); position: fixed; top:0; left:0; }
+        .sidebar-brand { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .sidebar nav a { display: flex; align-items: center; gap: 10px; padding: 11px 16px; color: rgba(255,255,255,0.8);
+            text-decoration: none; border-radius: 8px; margin: 3px 10px; transition: all 0.2s; font-size:14px; }
+        .sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,0.2); color: white; }
+        .main { margin-left: 240px; padding: 28px; min-height: 100vh; }
+        .card { background: white; border-radius: 12px; padding: 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+        .stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); display:flex; align-items:center; gap:16px; }
+        .btn-primary { background: linear-gradient(135deg,#7c3aed,#db2777); color: white; padding: 8px 18px;
+            border-radius: 8px; border: none; cursor: pointer; font-size:14px; }
+        .btn-danger { background: #ef4444; color: white; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-size:13px; }
+        .btn-edit { background: #f59e0b; color: white; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-size:13px; }
+        table { width: 100%; border-collapse: collapse; font-size:14px; }
+        th { background: #f9fafb; padding: 11px 14px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
+        td { padding: 11px 14px; border-bottom: 1px solid #f3f4f6; color: #374151; vertical-align: middle; }
+        tr:hover td { background: #fafafa; }
+        .badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+        .badge-green { background:#dcfce7;color:#16a34a; } .badge-blue { background:#dbeafe;color:#1d4ed8; }
+        .badge-yellow { background:#fef9c3;color:#854d0e; } .badge-red { background:#fee2e2;color:#dc2626; }
+        input, select, textarea { border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 12px;
+            width: 100%; font-size: 14px; outline: none; box-sizing: border-box; }
+        input:focus, select:focus, textarea:focus { border-color: #7c3aed; }
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; }
+        .modal-overlay.show { display:flex; }
+        .modal-box { background:white; border-radius:16px; padding:28px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; }
+        #loginSection { display:flex; min-height:100vh; align-items:center; justify-content:center; }
+        #dashSection { display:none; }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginSection">
+    <div class="card w-full max-w-md p-8 shadow-xl" style="max-width:420px">
+        <div class="text-center mb-8">
+            <i class="fas fa-store text-5xl mb-4" style="color:#7c3aed"></i>
+            <h1 class="text-2xl font-bold text-gray-800">Admin UrbanStore</h1>
+            <p class="text-gray-500 text-sm mt-1">Masuk ke panel admin</p>
+        </div>
+        <form id="loginForm">
+            <div class="mb-4">
+                <label class="text-sm font-medium text-gray-700 block mb-1">Email</label>
+                <input type="email" id="adminEmail" value="admin@urbanstore.com" required>
+            </div>
+            <div class="mb-6">
+                <label class="text-sm font-medium text-gray-700 block mb-1">Password</label>
+                <input type="password" id="adminPassword" value="admin123" required>
+            </div>
+            <button type="submit" class="btn-primary w-full py-3 font-semibold" style="width:100%">
+                <i class="fas fa-sign-in-alt mr-2"></i>Login Admin
+            </button>
+        </form>
+        <p class="text-center mt-4 text-xs text-gray-400">Default: admin@urbanstore.com / admin123</p>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashSection">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h2 class="text-white text-lg font-bold"><i class="fas fa-store mr-2"></i>UrbanStore</h2>
+            <p class="text-white/60 text-xs mt-1">Admin Panel</p>
+        </div>
+        <nav class="mt-4">
+            <a href="#" onclick="showPage('dashboard')" id="nav-dashboard" class="active">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="#" onclick="showPage('products')" id="nav-products">
+                <i class="fas fa-box"></i> Produk
+            </a>
+            <a href="#" onclick="showPage('orders')" id="nav-orders">
+                <i class="fas fa-shopping-bag"></i> Pesanan
+            </a>
+            <a href="#" onclick="showPage('users')" id="nav-users">
+                <i class="fas fa-users"></i> Pengguna
+            </a>
+        </nav>
+        <div style="position:absolute;bottom:20px;left:0;width:100%;padding:0 10px">
+            <a href="javascript:adminLogout()" style="color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:8px;padding:10px;border-radius:8px;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="main" id="mainContent"></div>
+</div>
+
+<!-- MODAL PRODUK -->
+<div class="modal-overlay" id="productModal">
+    <div class="modal-box">
+        <h3 class="text-lg font-bold text-gray-800 mb-5" id="modalTitle">Tambah Produk</h3>
+        <form id="productForm">
+            <input type="hidden" id="productId">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div style="grid-column:1/-1">
+                    <label class="text-sm font-medium text-gray-700 block mb-1">Nama Produk *</label>
+                    <input type="text" id="pName" required placeholder="Nama produk">
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 block mb-1">Kategori *</label>
+                    <input type="text" id="pCategory" required placeholder="Clothing / Footwear / dll">
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 block mb-1">Harga (Rp) *</label>
+                    <input type="number" id="pPrice" required min="0" placeholder="499000">
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 block mb-1">Stok *</label>
+                    <input type="number" id="pStock" required min="0" placeholder="25">
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 block mb-1">Berat (gram) *</label>
+                    <input type="number" id="pWeight" required min="0" placeholder="500">
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 block mb-1">Rating (0-5)</label>
+                    <input type="number" id="pRating" min="0" max="5" step="0.1" placeholder="4.5">
+                </div>
+                <div style="grid-column:1/-1">
+                    <label class="text-sm font-medium text-gray-700 block mb-1">URL Gambar</label>
+                    <input type="text" id="pImage" placeholder="https://...">
+                </div>
+                <div style="grid-column:1/-1">
+                    <label class="text-sm font-medium text-gray-700 block mb-1">Deskripsi</label>
+                    <textarea id="pDescription" rows="3" placeholder="Deskripsi produk..."></textarea>
+                </div>
+            </div>
+            <div class="flex gap-3 justify-end mt-5">
+                <button type="button" onclick="closeModal()"
+                    style="padding:8px 18px;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;background:white">
+                    Batal
+                </button>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save mr-2"></i><span id="saveBtnText">Simpan</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// ==================== API CONFIG & HEADERS ====================
+const API_URL = 'https://uasbackendisnaeni-production.up.railway.app';
+
+function getAdminHeaders() {
+    let token = localStorage.getItem('admin_token');
+    if (token) {
+        // Hapus tanda kutip jika disimpan sebagai JSON string
+        try {
+            const parsed = JSON.parse(token);
+            if (typeof parsed === 'string') token = parsed;
+        } catch (e) {}
+        return { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+    }
+    return { 'Content-Type': 'application/json' };
+}
+
+function fmt(n) {
+    return new Intl.NumberFormat('id-ID', { style:'currency', currency:'IDR', minimumFractionDigits:0 }).format(n);
+}
+
+// ==================== AUTH ADMIN ====================
+document.getElementById('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('adminEmail').value;
+    const pass  = document.getElementById('adminPassword').value;
+
+    try {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass })
+        });
+        const json = await response.json();
+        
+        if (json.success) {
+            const user = json.data.user;
+            if (user.role === 'admin') {
+                localStorage.setItem('admin_token', json.data.token);
+                localStorage.setItem('admin_session', JSON.stringify(user));
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('dashSection').style.display  = 'block';
+                await showPage('dashboard');
+            } else {
+                Swal.fire({ icon:'error', title:'Akses Ditolak', text:'Akun ini bukan akun admin!' });
+            }
+        } else {
+            Swal.fire({ icon:'error', title:'Gagal', text: json.message || 'Email atau password salah!' });
+        }
+    } catch (err) {
+        console.error('Error admin login:', err);
+        Swal.fire({ icon:'error', title:'Error', text: 'Terjadi kesalahan koneksi ke server!' });
+    }
+});
+
+function adminLogout() {
+    localStorage.removeItem('admin_session');
+    localStorage.removeItem('admin_token');
+    document.getElementById('dashSection').style.display  = 'none';
+    document.getElementById('loginSection').style.display = 'flex';
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    // Auto login kalau session masih ada
+    const sess = localStorage.getItem('admin_session');
+    const token = localStorage.getItem('admin_token');
+    if (sess && token) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('dashSection').style.display  = 'block';
+        await showPage('dashboard');
+    }
+});
+
+// ==================== NAVIGASI ====================
+async function showPage(page) {
+    document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+    const el = document.getElementById('nav-' + page);
+    if (el) el.classList.add('active');
+    
+    if (page === 'dashboard') await renderDashboard();
+    else if (page === 'products') await renderAdminProducts();
+    else if (page === 'orders')   await renderAdminOrders();
+    else if (page === 'users')    await renderAdminUsers();
+}
+
+// ==================== DASHBOARD ====================
+async function renderDashboard() {
+    try {
+        const pRes = await fetch(`${API_URL}/api/products`);
+        const pJson = await pRes.json();
+        const products = pJson.success ? pJson.data : [];
+
+        const oRes = await fetch(`${API_URL}/api/orders`, { headers: getAdminHeaders() });
+        const oJson = await oRes.json();
+        const orders = oJson.success ? oJson.data : [];
+
+        const uRes = await fetch(`${API_URL}/api/auth/users`, { headers: getAdminHeaders() });
+        const uJson = await uRes.json();
+        const allUsers = uJson.success ? uJson.data : [];
+        const customers = allUsers.filter(u => u.role !== 'admin');
+
+        const revenue  = orders.reduce((s, o) => s + Number(o.totalAmount || 0), 0);
+        const badgeCls = s => ({paid:'badge-green',shipped:'badge-blue',delivered:'badge-green',pending:'badge-yellow',cancelled:'badge-red',processing:'badge-yellow'})[s]||'badge-yellow';
+
+        document.getElementById('mainContent').innerHTML = `
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+                <div class="stat-card">
+                    <div style="width:52px;height:52px;border-radius:50%;background:#ede9fe;display:flex;align-items:center;justify-content:center">
+                        <i class="fas fa-box" style="color:#7c3aed;font-size:22px"></i>
+                    </div>
+                    <div><p style="color:#6b7280;font-size:13px">Total Produk</p><p style="font-size:28px;font-weight:700;color:#111">${products.length}</p></div>
+                </div>
+                <div class="stat-card">
+                    <div style="width:52px;height:52px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center">
+                        <i class="fas fa-shopping-bag" style="color:#16a34a;font-size:22px"></i>
+                    </div>
+                    <div><p style="color:#6b7280;font-size:13px">Total Pesanan</p><p style="font-size:28px;font-weight:700;color:#111">${orders.length}</p></div>
+                </div>
+                <div class="stat-card">
+                    <div style="width:52px;height:52px;border-radius:50%;background:#fce7f3;display:flex;align-items:center;justify-content:center">
+                        <i class="fas fa-users" style="color:#db2777;font-size:22px"></i>
+                    </div>
+                    <div><p style="color:#6b7280;font-size:13px">Total Customer</p><p style="font-size:28px;font-weight:700;color:#111">${customers.length}</p></div>
+                </div>
+                <div class="stat-card">
+                    <div style="width:52px;height:52px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center">
+                        <i class="fas fa-money-bill-wave" style="color:#d97706;font-size:22px"></i>
+                    </div>
+                    <div><p style="color:#6b7280;font-size:13px">Total Pendapatan</p><p style="font-size:20px;font-weight:700;color:#111">${fmt(revenue)}</p></div>
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="font-bold text-gray-800 mb-4">Pesanan Terbaru</h2>
+                ${orders.length === 0
+                    ? '<p class="text-gray-400 text-center py-8">Belum ada pesanan</p>'
+                    : `<div style="overflow-x:auto"><table><thead><tr>
+                        <th>Order ID</th><th>Customer</th><th>Kota</th><th>Total</th><th>Status</th><th>Tanggal</th>
+                       </tr></thead><tbody>
+                       ${orders.slice(0,5).map(o=>`<tr>
+                           <td style="font-family:monospace;font-size:11px">${o.id}</td>
+                           <td>${o.customerName}</td><td>${o.kota||'-'}</td>
+                           <td>${fmt(o.totalAmount)}</td>
+                           <td><span class="badge ${badgeCls(o.status)}">${o.status}</span></td>
+                           <td>${new Date(o.date).toLocaleDateString('id-ID')}</td>
+                       </tr>`).join('')}
+                       </tbody></table></div>`}
+            </div>`;
+    } catch (err) {
+        console.error('Error render dashboard:', err);
+        document.getElementById('mainContent').innerHTML = '<p class="text-red-500">Gagal memuat data dashboard.</p>';
+    }
+}
+</script>
+
+<script>
+// ==================== PRODUK ====================
+async function renderAdminProducts() {
+    try {
+        const pRes = await fetch(`${API_URL}/api/products`);
+        const pJson = await pRes.json();
+        const products = pJson.success ? pJson.data : [];
+
+        document.getElementById('mainContent').innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <h1 class="text-2xl font-bold text-gray-800">Manajemen Produk</h1>
+                <button class="btn-primary" onclick="openAddProduct()"><i class="fas fa-plus mr-2"></i>Tambah Produk</button>
+            </div>
+            <div class="card" style="overflow-x:auto">
+                <table><thead><tr>
+                    <th>Gambar</th><th>Nama Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Berat</th><th>Rating</th><th>Aksi</th>
+                </tr></thead><tbody>
+                ${products.length === 0
+                    ? '<tr><td colspan="8" style="text-align:center;padding:40px;color:#9ca3af">Belum ada produk</td></tr>'
+                    : products.map(p => `<tr>
+                        <td><img src="${p.image}" style="width:52px;height:52px;object-fit:cover;border-radius:8px"
+                            onerror="this.src='https://picsum.photos/52/52'"></td>
+                        <td><strong>${p.name}</strong></td>
+                        <td><span class="badge badge-blue">${p.category}</span></td>
+                        <td>${fmt(p.price)}</td>
+                        <td>${p.stock}</td>
+                        <td>${p.weight}g</td>
+                        <td><i class="fas fa-star" style="color:#fbbf24"></i> ${p.rating}</td>
+                        <td style="display:flex;gap:6px">
+                            <button class="btn-edit" onclick="openEditProduct('${p.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn-danger" onclick="deleteProduct('${p.id}','${p.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                      </tr>`).join('')}
+                </tbody></table>
+            </div>`;
+    } catch (err) {
+        console.error('Error render products:', err);
+        document.getElementById('mainContent').innerHTML = '<p class="text-red-500">Gagal memuat data produk.</p>';
+    }
+}
+
+function openAddProduct() {
+    document.getElementById('modalTitle').textContent = 'Tambah Produk';
+    document.getElementById('saveBtnText').textContent = 'Simpan';
+    document.getElementById('productForm').reset();
+    document.getElementById('productId').value = '';
+    document.getElementById('productModal').classList.add('show');
+}
+
+async function openEditProduct(id) {
+    try {
+        const response = await fetch(`${API_URL}/api/products/${id}`);
+        const json = await response.json();
+        
+        if (json.success) {
+            const p = json.data;
+            document.getElementById('modalTitle').textContent = 'Edit Produk';
+            document.getElementById('saveBtnText').textContent = 'Update';
+            document.getElementById('productId').value = p.id;
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pCategory').value = p.category;
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pStock').value = p.stock;
+            document.getElementById('pWeight').value = p.weight;
+            document.getElementById('pRating').value = p.rating;
+            document.getElementById('pImage').value = p.image || '';
+            document.getElementById('pDescription').value = p.description || '';
+            document.getElementById('productModal').classList.add('show');
+        }
+    } catch (err) {
+        console.error('Error open edit product:', err);
+        Swal.fire({ icon:'error', title:'Error', text:'Gagal mengambil data produk!' });
+    }
+}
+
+function closeModal() {
+    document.getElementById('productModal').classList.remove('show');
+}
+
+document.getElementById('productForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('productId').value;
+    const data = {
+        name:        document.getElementById('pName').value,
+        category:    document.getElementById('pCategory').value,
+        price:       parseInt(document.getElementById('pPrice').value),
+        stock:       parseInt(document.getElementById('pStock').value),
+        weight:      parseInt(document.getElementById('pWeight').value),
+        rating:      parseFloat(document.getElementById('pRating').value) || 0,
+        image:       document.getElementById('pImage').value || 'https://picsum.photos/400/400',
+        description: document.getElementById('pDescription').value
+    };
+
+    try {
+        let url = `${API_URL}/api/products`;
+        let method = 'POST';
+        if (id) {
+            url = `${API_URL}/api/products/${id}`;
+            method = 'PUT';
+        }
+
+        const response = await fetch(url, {
+            method: method,
+            headers: getAdminHeaders(),
+            body: JSON.stringify(data)
+        });
+        const json = await response.json();
+        
+        if (json.success) {
+            Swal.fire({ icon:'success', title:'Berhasil', text: id ? 'Produk diperbarui' : 'Produk ditambahkan', timer:1500, showConfirmButton:false });
+            closeModal();
+            await renderAdminProducts();
+        } else {
+            Swal.fire({ icon:'error', title:'Gagal', text: json.message || 'Gagal menyimpan produk!' });
+        }
+    } catch (err) {
+        console.error('Error saving product:', err);
+        Swal.fire({ icon:'error', title:'Error', text:'Terjadi kesalahan koneksi saat menyimpan produk!' });
+    }
+});
+
+function deleteProduct(id, name) {
+    Swal.fire({
+        title:'Hapus Produk?', text:`"${name}" akan dihapus!`,
+        icon:'warning', showCancelButton:true,
+        confirmButtonColor:'#ef4444', cancelButtonText:'Batal', confirmButtonText:'Hapus'
+    }).then(async r => {
+        if (!r.isConfirmed) return;
+        
+        try {
+            const response = await fetch(`${API_URL}/api/products/${id}`, {
+                method: 'DELETE',
+                headers: getAdminHeaders()
+            });
+            const json = await response.json();
+            if (json.success) {
+                Swal.fire({ icon:'success', title:'Terhapus!', timer:1200, showConfirmButton:false });
+                await renderAdminProducts();
+            } else {
+                Swal.fire({ icon:'error', title:'Gagal', text: json.message || 'Gagal menghapus produk!' });
+            }
+        } catch (err) {
+            console.error('Error deleting product:', err);
+            Swal.fire({ icon:'error', title:'Error', text:'Terjadi kesalahan koneksi saat menghapus produk!' });
+        }
+    });
+}
+
+// ==================== PESANAN ====================
+async function renderAdminOrders() {
+    try {
+        const oRes = await fetch(`${API_URL}/api/orders`, { headers: getAdminHeaders() });
+        const oJson = await oRes.json();
+        const orders = oJson.success ? oJson.data : [];
+        const badgeCls = s => ({paid:'badge-green',shipped:'badge-blue',delivered:'badge-green',pending:'badge-yellow',cancelled:'badge-red',processing:'badge-yellow'})[s]||'badge-yellow';
+
+        document.getElementById('mainContent').innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <h1 class="text-2xl font-bold text-gray-800">Manajemen Pesanan</h1>
+                <span style="color:#6b7280;font-size:14px">${orders.length} pesanan</span>
+            </div>
+            <div class="card" style="overflow-x:auto">
+                ${orders.length === 0
+                    ? '<p style="text-align:center;padding:40px;color:#9ca3af">Belum ada pesanan</p>'
+                    : `<table><thead><tr>
+                        <th>Order ID</th><th>Customer</th><th>Produk</th><th>Kota</th><th>Total</th><th>Status</th><th>Tanggal</th><th>Aksi Status</th>
+                       </tr></thead><tbody>
+                       ${orders.map(o=>`<tr>
+                           <td style="font-family:monospace;font-size:11px">${o.id}</td>
+                           <td>
+                               <strong>${o.customerName}</strong><br>
+                               <small style="color:#6b7280">${o.phone}</small>
+                           </td>
+                           <td>${(o.items||[]).map(i=>`<div style="font-size:12px">${i.name} x${i.quantity}</div>`).join('')}</td>
+                           <td>${o.kota||'-'}</td>
+                           <td><strong>${fmt(o.totalAmount)}</strong></td>
+                           <td><span class="badge ${badgeCls(o.status)}">${o.status}</span></td>
+                           <td>${new Date(o.date).toLocaleDateString('id-ID')}</td>
+                           <td>
+                               <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px 8px;font-size:12px;width:auto;">
+                                   <option value="pending" ${o.status==='pending'?'selected':''}>pending</option>
+                                   <option value="paid" ${o.status==='paid'?'selected':''}>paid</option>
+                                   <option value="processing" ${o.status==='processing'?'selected':''}>processing</option>
+                                   <option value="shipped" ${o.status==='shipped'?'selected':''}>shipped</option>
+                                   <option value="delivered" ${o.status==='delivered'?'selected':''}>delivered</option>
+                                   <option value="cancelled" ${o.status==='cancelled'?'selected':''}>cancelled</option>
+                               </select>
+                           </td>
+                       </tr>`).join('')}
+                       </tbody></table>`}
+            </div>`;
+    } catch (err) {
+        console.error('Error render orders:', err);
+        document.getElementById('mainContent').innerHTML = '<p class="text-red-500">Gagal memuat data pesanan.</p>';
+    }
+}
+
+async function updateOrderStatus(orderId, newStatus) {
+    try {
+        const response = await fetch(`${API_URL}/api/orders/${orderId}/status`, {
+            method: 'PUT',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({ status: newStatus })
+        });
+        const json = await response.json();
+        if (json.success) {
+            Swal.fire({ icon:'success', title:'Terkonfirmasi', text:`Status order diubah ke ${newStatus}`, timer:1000, showConfirmButton:false });
+            await renderAdminOrders();
+        } else {
+            Swal.fire({ icon:'error', title:'Gagal', text: json.message || 'Gagal mengubah status!' });
+        }
+    } catch (err) {
+        console.error('Error updating order status:', err);
+        Swal.fire({ icon:'error', title:'Error', text:'Gagal terhubung ke server!' });
+    }
+}
+
+// ==================== USERS ====================
+async function renderAdminUsers() {
+    try {
+        const uRes = await fetch(`${API_URL}/api/auth/users`, { headers: getAdminHeaders() });
+        const uJson = await uRes.json();
+        const users = uJson.success ? uJson.data : [];
+
+        document.getElementById('mainContent').innerHTML = `
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Data Pengguna</h1>
+            <div class="card" style="overflow-x:auto">
+                <table><thead><tr>
+                    <th>ID</th><th>Nama</th><th>Email</th><th>Role</th><th>Tanggal Daftar</th>
+                </tr></thead><tbody>
+                ${users.length === 0
+                    ? '<tr><td colspan="5" style="text-align:center;padding:40px;color:#9ca3af">Belum ada pengguna</td></tr>'
+                    : users.map(u=>`<tr>
+                        <td>${u.id}</td>
+                        <td><strong>${u.name}</strong></td>
+                        <td>${u.email}</td>
+                        <td><span class="badge ${u.role==='admin'?'badge-blue':'badge-green'}">${u.role}</span></td>
+                        <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString('id-ID') : '-'}</td>
+                      </tr>`).join('')}
+                </tbody></table>
+            </div>`;
+    } catch (err) {
+        console.error('Error render users:', err);
+        document.getElementById('mainContent').innerHTML = '<p class="text-red-500">Gagal memuat data pengguna.</p>';
+    }
+}
+
+// Tutup modal klik luar
+document.getElementById('productModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>

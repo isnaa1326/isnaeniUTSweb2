@@ -1,6 +1,20 @@
 // ==================== PRODUCT FUNCTIONS ====================
+async function fetchProducts() {
+    try {
+        const response = await fetch(`${API_URL}/api/products`);
+        const json = await response.json();
+        if (json.success) {
+            PRODUCTS = json.data;
+            return true;
+        }
+    } catch (err) {
+        console.error('Error fetch products:', err);
+    }
+    return false;
+}
+
 function getProductById(id) { 
-    return PRODUCTS.find(p => p.id === id); 
+    return PRODUCTS.find(p => p.id == id); 
 }
 
 function searchProducts(q) { 

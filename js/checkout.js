@@ -30,9 +30,9 @@ function showQRISModal(formData, totalAmount, ongkir, kotaNama) {
     `;
     document.body.appendChild(modal);
     
-    document.getElementById('confirmPayment').onclick = () => {
+    document.getElementById('confirmPayment').onclick = async () => {
         modal.remove();
-        processCheckout(formData, ongkir, kotaNama);
+        await processCheckout(formData, ongkir, kotaNama);
         navigateTo('history');
     };
     
@@ -42,7 +42,21 @@ function showQRISModal(formData, totalAmount, ongkir, kotaNama) {
 }
 
 // ==================== ORDER ====================
-function processCheckout(formData, ongkir, kotaNama) {
+async function fetchKota() {
+    try {
+        const response = await fetch(`${API_URL}/api/kota`);
+        const json = await response.json();
+        if (json.success) {
+            KOTA = json.data;
+            return true;
+        }
+    } catch (err) {
+        console.error('Error fetch kota:', err);
+    }
+    return false;
+}
+
+async function processCheckout(formData, ongkir, kotaNama) {
     const user = getCurrentUser();
     if (!user) { showToast('Login dulu!', 'error'); return false; }
     const cart = getCart();
@@ -50,32 +64,64 @@ function processCheckout(formData, ongkir, kotaNama) {
     
     const subtotal = getCartTotal();
     const total = subtotal + ongkir;
+    const kotaId = window.selectedKotaId;
     
-    const transaction = {
-        id: generateId(),
-        userId: user.email,
-        customerName: formData.name,
-        address: formData.address,
-        phone: formData.phone,
-        kota: kotaNama,
-        ongkir: ongkir,
-        items: cart,
-        subtotal: subtotal,
-        totalAmount: total,
-        status: 'paid',
-        date: new Date().toISOString()
-    };
+    const items = cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        price: item.price,
+        quantity: item.quantity
+    }));
     
-    const orders = getFromLocalStorage(`orders_${user.email}`) || [];
-    orders.unshift(transaction);
-    saveToLocalStorage(`orders_${user.email}`, orders);
-    clearCart();
-    showToast('Pembayaran berhasil! Pesanan Anda diproses.');
-    return transaction;
+    try {
+        const response = await fetch(`${API_URL}/api/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader()
+            },
+            body: JSON.stringify({
+                customerName: formData.name,
+                address: formData.address,
+                phone: formData.phone,
+                kota_id: parseInt(kotaId),
+                kota: kotaNama,
+                ongkir: ongkir,
+                items: items,
+                subtotal: subtotal,
+                totalAmount: total
+            })
+        });
+        const json = await response.json();
+        if (json.success) {
+            clearCart();
+            showToast('Pembayaran berhasil! Pesanan Anda diproses.');
+            return json.data;
+        } else {
+            showToast(json.message || 'Checkout gagal!', 'error');
+            return false;
+        }
+    } catch (err) {
+        console.error('Error checkout:', err);
+        showToast('Terjadi kesalahan koneksi saat memproses checkout!', 'error');
+        return false;
+    }
 }
 
-function getOrderHistory() {
+async function getOrderHistory() {
     const user = getCurrentUser();
     if (!user) return [];
-    return getFromLocalStorage(`orders_${user.email}`) || [];
+    try {
+        const response = await fetch(`${API_URL}/api/orders/my`, {
+            headers: getAuthHeader()
+        });
+        const json = await response.json();
+        if (json.success) {
+            return json.data;
+        }
+    } catch (err) {
+        console.error('Error fetch order history:', err);
+    }
+    return [];
 }

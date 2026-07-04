@@ -1,33 +1,56 @@
 // ==================== AUTH ====================
-function registerUser(name, email, password) {
+async function registerUser(name, email, password) {
     if (password.length < 6) {
         showToast('Password minimal 6 karakter!', 'error');
         return false;
     }
-    const users = getFromLocalStorage(STORAGE_USERS) || [];
-    if (users.some(u => u.email === email)) {
-        showToast('Email sudah terdaftar!', 'error');
+    try {
+        const response = await fetch(`${API_URL}/api/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+        });
+        const data = await response.json();
+        if (data.success) {
+            showToast(data.message || 'Registrasi berhasil! Silakan login.');
+            return true;
+        } else {
+            showToast(data.message || 'Registrasi gagal!', 'error');
+            return false;
+        }
+    } catch (err) {
+        console.error('Error register:', err);
+        showToast('Terjadi kesalahan koneksi ke server!', 'error');
         return false;
     }
-    users.push({ id: Date.now(), name, email, password, createdAt: new Date().toISOString() });
-    saveToLocalStorage(STORAGE_USERS, users);
-    showToast('Registrasi berhasil! Silakan login.');
-    return true;
 }
 
-function loginUser(email, password) {
-    const users = getFromLocalStorage(STORAGE_USERS) || [];
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-        saveToLocalStorage(STORAGE_SESSION, { email: user.email, name: user.name });
-        showToast(`Selamat datang, ${user.name}!`);
-        return true;
+async function loginUser(email, password) {
+    try {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (data.success) {
+            saveToLocalStorage(STORAGE_TOKEN, data.data.token);
+            saveToLocalStorage(STORAGE_SESSION, data.data.user);
+            showToast(data.message || `Selamat datang, ${data.data.user.name}!`);
+            return true;
+        } else {
+            showToast(data.message || 'Email atau password salah!', 'error');
+            return false;
+        }
+    } catch (err) {
+        console.error('Error login:', err);
+        showToast('Terjadi kesalahan koneksi ke server!', 'error');
+        return false;
     }
-    showToast('Email atau password salah!', 'error');
-    return false;
 }
 
 function logoutUser() {
+    localStorage.removeItem(STORAGE_TOKEN);
     localStorage.removeItem(STORAGE_SESSION);
     showToast('Anda telah logout');
     return true;
@@ -38,5 +61,5 @@ function getCurrentUser() {
 }
 
 function isAuthenticated() {
-    return getFromLocalStorage(STORAGE_SESSION) !== null;
+    return localStorage.getItem(STORAGE_TOKEN) !== null;
 }

@@ -26,10 +26,11 @@ function renderLogin() {
         <div class="mb-6"><label style="color: var(--text-primary)">Password</label><input type="password" id="password" required class="w-full px-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
         <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-semibold">Login</button></form>
         <p class="text-center mt-6"><span style="color: var(--text-secondary)">Don't have account?</span> <button onclick="navigateTo('register')" class="text-purple-600 font-semibold">Register</button></p></div></div>`;
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (loginUser(document.getElementById('email').value, document.getElementById('password').value)) {
-            currentPage = 'products'; render();
+        const success = await loginUser(document.getElementById('email').value, document.getElementById('password').value);
+        if (success) {
+            currentPage = 'products'; await render();
         }
     });
 }
@@ -43,10 +44,11 @@ function renderRegister() {
         <div class="mb-6"><label style="color: var(--text-primary)">Password (min 6)</label><input type="password" id="password" required class="w-full px-4 py-2 border rounded-lg" style="background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color)"></div>
         <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-semibold">Register</button></form>
         <p class="text-center mt-6"><span style="color: var(--text-secondary)">Already have account?</span> <button onclick="navigateTo('login')" class="text-purple-600 font-semibold">Login</button></p></div></div>`;
-    document.getElementById('registerForm').addEventListener('submit', (e) => {
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (registerUser(document.getElementById('name').value, document.getElementById('email').value, document.getElementById('password').value)) {
-            currentPage = 'login'; render();
+        const success = await registerUser(document.getElementById('name').value, document.getElementById('email').value, document.getElementById('password').value);
+        if (success) {
+            currentPage = 'login'; await render();
         }
     });
 }
@@ -157,7 +159,8 @@ function renderCheckout() {
             const total = subtotal + ongkir;
             document.getElementById('totalBayar').innerHTML = formatRupiah(total);
             window.selectedOngkir = ongkir;
-            window.selectedKotaNama = KOTA.find(k => k.id === kotaId)?.nama;
+            window.selectedKotaId = kotaId;
+            window.selectedKotaNama = KOTA.find(k => k.id == kotaId)?.nama;
         } else {
             document.getElementById('ongkirDisplay').innerHTML = `<i class="fas fa-truck"></i> Ongkos Kirim: -`;
             document.getElementById('ongkirRow').style.display = 'none';
@@ -182,8 +185,8 @@ function renderCheckout() {
     });
 }
 
-function renderHistory() {
-    const orders = getOrderHistory();
+async function renderHistory() {
+    const orders = await getOrderHistory();
     document.getElementById('app').innerHTML = `${renderNavbar()}<div class="glass-card p-6 rounded-2xl"><h2 class="text-2xl font-bold mb-6" style="color: var(--text-primary)">Riwayat Pesanan</h2>
         ${orders.length === 0 ? `<div class="text-center py-20"><i class="fas fa-receipt text-6xl mb-4" style="color: var(--text-secondary)"></i><p style="color: var(--text-secondary)">Belum ada pesanan</p><button onclick="navigateTo('products')" class="btn-primary text-white px-6 py-2 rounded-lg mt-4">Belanja</button></div>` :
         `<div class="space-y-6">${orders.map(order => `<div class="border rounded-xl p-4" style="border-color: var(--border-color); background: var(--bg-card)">
@@ -212,17 +215,38 @@ function renderProductDetail() {
 }
 
 // ==================== GLOBAL FUNCTIONS ====================
-function navigateTo(page) { currentPage = page; currentProduct = null; render(); }
-function logout() { logoutUser(); currentPage = 'login'; render(); }
-function viewProduct(id) { currentProduct = getProductById(id); currentPage = 'detail'; render(); }
+async function navigateTo(page) { currentPage = page; currentProduct = null; await render(); }
+async function logout() { logoutUser(); currentPage = 'login'; await render(); }
+async function viewProduct(id) { currentProduct = getProductById(id); currentPage = 'detail'; await render(); }
 function addToCartById(id) { addToCart(getProductById(id), 1); }
-function updateCartItem(id, qty) { updateQuantity(id, parseInt(qty)); render(); }
-function removeCartItem(id) { removeFromCart(id); render(); }
+async function updateCartItem(id, qty) { updateQuantity(id, parseInt(qty)); await render(); }
+async function removeCartItem(id) { removeFromCart(id); await render(); }
 
-function render() {
+async function render() {
     if (!isAuthenticated() && currentPage !== 'login' && currentPage !== 'register') currentPage = 'login';
-    const pages = { login: renderLogin, register: renderRegister, products: renderProducts, cart: renderCart, checkout: renderCheckout, history: renderHistory, detail: renderProductDetail };
-    (pages[currentPage] || renderProducts)();
+    
+    // Fetch products and kota if empty and user is authenticated
+    if (isAuthenticated()) {
+        if (PRODUCTS.length === 0) {
+            await fetchProducts();
+        }
+        if (KOTA.length === 0) {
+            await fetchKota();
+        }
+    }
+    
+    const pages = { 
+        login: renderLogin, 
+        register: renderRegister, 
+        products: renderProducts, 
+        cart: renderCart, 
+        checkout: renderCheckout, 
+        history: renderHistory, 
+        detail: renderProductDetail 
+    };
+    
+    const renderFn = pages[currentPage] || renderProducts;
+    await renderFn();
 }
 
 // ==================== START APP ====================
